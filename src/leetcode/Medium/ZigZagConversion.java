@@ -7,6 +7,7 @@ package leetcode.Medium;
 
 public class ZigZagConversion {
 
+
     public String convert(String s, int numRows) {
         StringBuilder[]  temp = new StringBuilder[numRows];
         StringBuilder result = new StringBuilder();
@@ -18,9 +19,11 @@ public class ZigZagConversion {
         // store in temp Array
         int i = 0;
         while (i < s.length()) {
+            // vertically scan
             for (int index = 0; index < numRows && i < s.length(); index++) {
                 temp[index].append(s.charAt(i++));
             }
+            // obliquely scan
             for (int index = numRows - 2; index >= 1 && i < s.length(); index--) {
                 temp[index].append(s.charAt(i++));
             }
