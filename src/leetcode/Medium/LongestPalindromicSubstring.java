@@ -6,4 +6,8 @@ package leetcode.Medium;
 
 
 public class LongestPalindromicSubstring {
+
+    public String longParlindromicSubstring(String s) {
+        return "";
+    }
 }
