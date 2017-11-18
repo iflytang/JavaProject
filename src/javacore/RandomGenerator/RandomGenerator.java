@@ -51,13 +51,35 @@ public class RandomGenerator {
         return num;
     }
 
+    public List<Integer> removeUeId(Integer ueId) {
+        ueIdList.remove(ueId);
+        return ueIdList;
+    }
+
     public static void main(String[] args) {
         RandomGenerator test = new RandomGenerator();
         int ueId;
         for(int i = 0; i < 11; i++) {
             ueId = test.randomGeneratorByRandom();
             System.out.println("assign [" + i + "] random ueId by random: " + ueId + "\n");
+            if ( i == 9) {
+                test.ueIdList.remove((Integer) 10);
+                System.out.println("remove id 10, now ueIdList ==> " + test.ueIdList);
+            }
 //            test.randomGeneratorByMath();
         }
+
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        for (int i = 10; i > 0; i --) {
+            list1.add(i);
+            list2.add(i);
+        }
+        System.out.println("remove id by Object: " + list1 + "; remove id by index: " + list2 );
+        list1.remove((Integer) 9);
+        list2.remove(9);
+        test.ueIdList.remove(9);
+        test.removeUeId(9);
+        System.out.println("remove id by Object: " + list1 + "; remove id by index: " + list2 + ";\n remove id in ueIdList: " + test.ueIdList);
     }
 }

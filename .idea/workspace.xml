@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0ccbd0c-9f1b-4c80-9cee-afe1672d8688" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/javaCore9/javacore/RandomGenerator/RandomGenerator.class" afterPath="$PROJECT_DIR$/out/production/javaCore9/javacore/RandomGenerator/RandomGenerator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javacore/RandomGenerator/RandomGenerator.java" afterPath="$PROJECT_DIR$/src/javacore/RandomGenerator/RandomGenerator.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -66,8 +64,8 @@
       <file leaf-file-name="RandomGenerator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/javacore/RandomGenerator/RandomGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="690">
-              <caret line="57" column="50" lean-forward="true" selection-start-line="57" selection-start-column="50" selection-end-line="57" selection-end-column="50" />
+            <state relative-caret-position="726">
+              <caret line="81" column="27" lean-forward="false" selection-start-line="81" selection-start-column="27" selection-end-line="81" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -831,8 +829,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javacore/RandomGenerator/RandomGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="57" column="50" lean-forward="true" selection-start-line="57" selection-start-column="50" selection-end-line="57" selection-end-column="50" />
+        <state relative-caret-position="726">
+          <caret line="81" column="27" lean-forward="false" selection-start-line="81" selection-start-column="27" selection-end-line="81" selection-end-column="27" />
           <folding />
         </state>
       </provider>
