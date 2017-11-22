@@ -1,4 +1,4 @@
-package javacore.test;
+package javacore.EmployeeAndManager;
 
 public abstract class Employee {
 

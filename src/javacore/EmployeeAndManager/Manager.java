@@ -1,7 +1,6 @@
-package javacore.test;
+package javacore.EmployeeAndManager;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Manager extends Employee {
 
