@@ -21,7 +21,7 @@ public class RandomGenerator {
 
         // if ueId have assigned, forbid to reassign
         if(Mac_UeId.get(mac) != null) {
-            System.out.println("Ue " + mac + " have assigned UeId " + Mac_UeId.get(mac) + ", fail to reassign!");
+            System.out.println("Ue [" + mac + "] have assigned UeId [" + Mac_UeId.get(mac) + "], fail to reassign!");
             return Mac_UeId.get(mac);
         }
 
@@ -46,9 +46,10 @@ public class RandomGenerator {
 
         // no conflicts for ueId, then store in ueIdSet
         ueIdList.add(ueId);
+        ueIdSet.add(ueId);
         Mac_UeId.put(mac, ueId);
         Collections.sort(ueIdList);     // sort ueId in ascending order
-        System.out.println("ueId " + ueId + " store in ueIdSet " + ueIdSet + ", in ueIdList " + ueIdList);
+        System.out.println("==> ueId " + ueId + " store in ueIdSet " + ueIdSet + ", in ueIdList " + ueIdList);
         System.out.println("Mac_UeId " + Mac_UeId);
         return ueId;
     }
@@ -100,17 +101,22 @@ public class RandomGenerator {
     public static void main(String[] args) {
         RandomGenerator test = new RandomGenerator();
         int ueId;
-        for (int i = 0; i < 11; i++) {
-            ueId = test.ueIdGenerator(Integer.toString(i));
-            System.out.println("assign [" + i + "] random ueId by random: " + ueId + "\n");
+        test.ueIdGenerator("01:02:03:04:05:06");
+        ueId = test.Mac_UeId.remove("01:02:03:04:05:06");
+        System.out.println("ueId: " + ueId + ", result: " + test.Mac_UeId.get("01:02:03:04:05:06"));
+        test.ueIdGenerator("11:22:33:44:55:66");
+        test.ueIdGenerator("01:02:03:04:05:06");
+//        for (int i = 0; i < 11; i++) {
+//            ueId = test.ueIdGenerator(Integer.toString(i));
+//            System.out.println("assign [" + i + "] random ueId by random: " + ueId + "\n");
 //            if (i == 9) {
 //                test.ueIdList.remove((Integer) 10);
 //                System.out.println("remove id 10, now ueIdList ==> " + test.ueIdList);
 //            }
 //            test.randomGeneratorByMath();
-        }
-
-        test.ueIdGenerator(Integer.toString(0));
+//        }
+//
+//        test.ueIdGenerator(Integer.toString(0));
 
         // test remove according to index or object
  /*       List<Integer> list1 = new ArrayList<>();

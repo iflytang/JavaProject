@@ -23,5 +23,20 @@ public class Test {
         System.out.println("storedIP: " + storedIp);
         System.out.println("macId: " + test.macId);
         System.out.println(!"A".equals("b"));
+
+        short ueId = 0xff;
+        if (ueId != 0xff) {
+            System.out.println("ueId?: " + ueId);
+        }
+        System.out.println("ueId: " + ueId);
+
+        String a = " 123";
+        if (a.charAt(0) == ' ') {
+            System.out.println("hello");
+        }
+        char result = a.charAt(1);
+        int sum = result;
+        System.out.println(-result);
+        System.out.println((((long) Integer.MAX_VALUE + 1)));
     }
 }
