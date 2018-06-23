@@ -20,5 +20,10 @@ public class Test {
         String int_hex = tools.int_to_hex_str(int_val);
         System.out.println("int: " + int_val + ", int_hex: " + int_hex);
 
+        // test ip_to_hex_str
+        String ip = "10.00.10.172";
+        String ip_hex = tools.ip_to_hex_str(ip);
+        System.out.println("ip: " + ip + ", ip_hex: " + ip_hex);
+
     }
 }

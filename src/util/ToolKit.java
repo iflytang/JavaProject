@@ -41,4 +41,19 @@ public class ToolKit implements ToolKitInterface {
         }
         return hex_str.toString();
     }
+
+    @Override
+    public String ip_to_hex_str(String ip) {
+        String[] ipArray = ip.split("\\.");
+        String[] tempIp = new String[4];
+        StringBuilder ipHexStr = new StringBuilder();
+        for(int i = 0; i < 4; i++) {
+            tempIp[i] = Integer.toHexString(Integer.parseInt(ipArray[i], 10));
+            if(tempIp[i].length() < 2) {
+                tempIp[i] = "0" + tempIp[i];
+            }
+            ipHexStr.append(tempIp[i]);
+        }
+        return ipHexStr.toString();
+    }
 }
