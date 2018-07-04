@@ -43,6 +43,15 @@ public class ToolKit implements ToolKitInterface {
     }
 
     @Override
+    public String byte_to_hex_str(byte val) {
+        String hex = Integer.toHexString(   val & 0xff);
+        if (hex.length() == 1) {
+            hex = '0' + hex;
+        }
+        return hex;
+    }
+
+    @Override
     public String ip_to_hex_str(String ip) {
         String[] ipArray = ip.split("\\.");
         String[] tempIp = new String[4];

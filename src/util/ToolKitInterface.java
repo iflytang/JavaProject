@@ -16,6 +16,9 @@ public interface ToolKitInterface {
     // convert
     String int_to_hex_str(int val);
 
+    // convert
+    String byte_to_hex_str(byte val);
+
     // convert ip (10.1.1.1) to hex str (0a010101)
     String ip_to_hex_str(String ip);
 }
