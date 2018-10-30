@@ -1,0 +1,9 @@
+{
+  "cat" : "kitty",
+  "info" : [
+    { "id" : 1, "name" : "Alice", "master" : "iflytang" },
+    { "id" : 2, "name" : "Bob", "master" : "Tree" },
+    { "id" : 3, "name" : "Carrot", "master" : "Jack" }
+  ],
+  "location": "zoo"
+}

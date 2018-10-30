@@ -1,0 +1,22 @@
+{
+  "sel_int": [
+    {
+      "id" : "1",
+      "device_id" : "01",
+      "in_port" : "1",
+      "out_port" : "2",
+      "ingress_time" : "null",
+      "hop_latency" : "null",
+      "bandwidth" : "100"
+    },
+    {
+      "id" : "2",
+      "device_id" : "02",
+      "in_port" : "1",
+      "out_port" : "2",
+      "ingress_time" : "null",
+      "hop_latency" : "null",
+      "bandwidth" : "100"
+    }
+  ]
+}
