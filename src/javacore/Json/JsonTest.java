@@ -3,7 +3,6 @@ package src.javacore.Json;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import sun.org.mozilla.javascript.internal.json.JsonParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -173,6 +172,17 @@ public class JsonTest {
         return hex;
     }
 
+    public String funcByteHexStr() {
+        String deviceId = "pof:0000000000000012";
+        String device = deviceId.substring(18, 20);
+        byte dpid = Integer.valueOf(device).byteValue();
+
+        int k = 2, b = 1;
+        byte y = (byte) (k * dpid + b);
+        System.out.println("deviceId: " + deviceId + ", dpid = " + dpid + ", y = " + y);
+        return byte2HexStr(y);
+    }
+
     public static void main(String[] args) {
 
         JsonTest test = new JsonTest();
@@ -188,10 +198,14 @@ public class JsonTest {
 //        test.createJsonArr();
 
 //        test.testTime();
-        test.testMap();
+//        test.testMap();
 
-        byte mapInfo = 0x1;
-        test.byte2HexStr(mapInfo);
+//        byte mapInfo = 0x1;
+//        test.byte2HexStr(mapInfo);
+
+        test.funcByteHexStr();
+
+
 
     }
 }
