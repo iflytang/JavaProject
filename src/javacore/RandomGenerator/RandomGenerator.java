@@ -12,6 +12,26 @@ public class RandomGenerator {
     protected List<Integer> ueIdList = new ArrayList<>();
     protected Map<String, Integer> Mac_UeId = new HashMap<>(); // store mac_ueId in Map
 
+    int ledNum = 10;
+    public String[] deviceArray = initDeviceArray(new String[ledNum]);
+
+    private String[] initDeviceArray(String[] deviceArray) {
+
+        deviceArray[0] = "pof:0000000000000001";
+        deviceArray[1] = "pof:0000000000000002";
+        deviceArray[2] = "pof:0000000000000003";
+        deviceArray[3] = "pof:0000000000000004";
+        deviceArray[4] = "pof:0000000000000005";
+
+        deviceArray[5] = "pof:0000000000000006";
+        deviceArray[6] = "pof:0000000000000007";
+        deviceArray[7] = "pof:0000000000000008";
+        deviceArray[8] = "pof:0000000000000009";
+        deviceArray[9] = "pof:000000000000000a";
+
+        return deviceArray;
+    }
+
     public int ueIdGenerator(String mac) {
         // assign UeId
         Random random = new Random();
@@ -132,5 +152,9 @@ public class RandomGenerator {
         test.removeUeId(9);
         System.out.println("remove id by Object: " + list1 + "; remove id by index: " + list2 + ";\n remove id in ueIdList: " + test.ueIdList);
     */
+
+    for (int i=0; i<test.deviceArray.length; i++) {
+        System.out.println(test.deviceArray[i]);
+    }
     }
 }

@@ -29,9 +29,9 @@ public class Test {
 //        System.out.println("byte: " + byte_val + ", byte_hex: " + byte_hex);
 
         /* test ip_to_hex_str */
-//        String ip = "10.00.10.172";
-//        String ip_hex = tools.ip_to_hex_str(ip);
-//        System.out.println("ip: " + ip + ", ip_hex: " + ip_hex);
+        String ip = "10.00.10.1728";
+        String ip_hex = tools.ip_to_hex_str(ip);
+        System.out.println("ip: " + ip + ", ip_hex: " + ip_hex);
 
     }
 }
