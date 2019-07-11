@@ -1,7 +1,5 @@
-## JavaCore Repository
+## JavaProject
 
-Code includes:
- 
- - JavaCore9 
- 
- - leetcode
+This is a personal java project.
+
+
