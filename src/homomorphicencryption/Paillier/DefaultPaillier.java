@@ -31,6 +31,8 @@ public class DefaultPaillier {
     /* the bit-length of modulus. */
     private int bitLength;
 
+    /* to generate 'g', small g can speed up encryption. */
+    private int randomRange = 50;
 
     public BigInteger getP() {
         return p;
@@ -96,8 +98,11 @@ public class DefaultPaillier {
                 .divide((p.subtract(BigInteger.ONE)).gcd(q.subtract(BigInteger.ONE)));
 
 
-        /* g is a random in [0, nSquare), where gcd(L(g^lambda mod n^2), n) = 1. */
-        g = new BigInteger(String.valueOf( (int) (Math.random()*nSquare.intValue())));
+        /* g is a random in [0, nSquare), where gcd(L(g^lambda mod n^2), n) = 1.
+        *  Attention, if g=2 or small g can speed up encryption.
+        * */
+//        g = new BigInteger(String.valueOf( (int) (Math.random()*randomRange)));
+        g =  new BigInteger("2");
 
         /* check whether g is ok, gcd(L(g^lambda mod n^2), n) = 1 */
         if ((g.intValue() < 0) || (L(g.modPow(lambda, nSquare)).gcd(n).intValue() != 1)) {
