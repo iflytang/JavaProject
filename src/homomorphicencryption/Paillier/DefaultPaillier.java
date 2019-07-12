@@ -32,6 +32,38 @@ public class DefaultPaillier {
     private int bitLength;
 
 
+    public BigInteger getP() {
+        return p;
+    }
+
+    public BigInteger getQ() {
+        return q;
+    }
+
+    public BigInteger getLambda() {
+        return lambda;
+    }
+
+    public BigInteger getN() {
+        return n;
+    }
+
+    public BigInteger getnSquare() {
+        return nSquare;
+    }
+
+    public BigInteger getG() {
+        return g;
+    }
+
+    public BigInteger getU() {
+        return u;
+    }
+
+    public int getBitLength() {
+        return bitLength;
+    }
+
     /**
      * define L(x) = (x-1)/n;  n=p*q
      * @param x x
@@ -142,7 +174,6 @@ public class DefaultPaillier {
         DefaultPaillier paillier = new DefaultPaillier();
 
         BigInteger key = paillier.KeyGen(32, 64);
-//        System.out.println("g: " + key);
 
         Scanner input = new Scanner(System.in);
         System.out.println("input two integer: ");
@@ -152,6 +183,8 @@ public class DefaultPaillier {
         BigInteger m1 = new BigInteger(str1);
         BigInteger m2 = new BigInteger(str2);
         System.out.println("m1: " + m1 + ", m2: " + m2);
+        System.out.println("p: " + paillier.getP() + ", q: " + paillier.getQ() + ", n: " + paillier.getN() +
+        ", g: " + paillier.getG() + ", lambda: " + paillier.getLambda() + ", u: " + paillier.getU());
 
         /**
          * PROPERTY ONE: Addictive homomorphic encryption.
