@@ -34,6 +34,9 @@ public class DefaultPaillier {
     /* to generate 'g', small g can speed up encryption. */
     private int randomRange = 50;
 
+    /* bigX in g^nx for self-blinding. */
+    private BigInteger bigX;
+
     public BigInteger getP() {
         return p;
     }
@@ -64,6 +67,10 @@ public class DefaultPaillier {
 
     public int getBitLength() {
         return bitLength;
+    }
+
+    public BigInteger getBigX() {
+        return bigX;
     }
 
     /**
@@ -123,6 +130,7 @@ public class DefaultPaillier {
      * @return ciphertext
      */
     public BigInteger Encrypt (BigInteger m, BigInteger r) {
+        System.out.println("r:" + r);
         return g.modPow(m, nSquare).multiply(r.modPow(n, nSquare)).mod(nSquare);
     }
 
@@ -136,12 +144,33 @@ public class DefaultPaillier {
         return Encrypt(m, r);
     }
 
+    public BigInteger Encrypt (BigInteger m, int rndR, boolean isSeed) {
+        BigInteger bigR;     // 'r' in E(m)=g^m*r^n
+
+        if (isSeed) {  // 'rndR' is random bits seed to generate BigInteger
+            int rnd = (int) (Math.random()*rndR)+1;    // [1, rndR]
+            bigR = new BigInteger(String.valueOf(rnd));
+            return Encrypt(m, bigR);
+        } else {
+            bigR = new BigInteger(String.valueOf(rndR));
+            return Encrypt(m, bigR);
+        }
+    }
+
+
     /**
      * Decrypt ciphertext c. plaintext m = (L(c^lambda mod n^2) * u) mod n
      * @param c ciphertext
      * @return plaintext
      */
     public BigInteger Decrypt (BigInteger c) {
+        return L(c.modPow(lambda, nSquare)).multiply(u).mod(n);
+    }
+
+    /** Decrypt ciphertext c in specified parameters. This means that we can pre-store the parameter in somewhere, then we
+     *  decrypt the ciphertext by this function.
+     */
+    public BigInteger Decrypt (BigInteger c, BigInteger lambda, BigInteger nSquare, BigInteger u, BigInteger n) {
         return L(c.modPow(lambda, nSquare)).multiply(u).mod(n);
     }
 
@@ -172,6 +201,21 @@ public class DefaultPaillier {
     public BigInteger gxPowMod () {
         BigInteger x = new BigInteger(bitLength/2, new Random());
         return g.modPow(n.multiply(x), nSquare);
+    }
+
+    /**
+     * make x specified or as a seed to generate random
+     * @param x specified value
+     * @return ciphertext
+     */
+    public BigInteger gxPowMod (int x, boolean isSeed) {
+        if (isSeed) {  // x is random seed
+            int rnd = (int) (Math.random()*x)+1;             // [1, x]
+            bigX = new BigInteger(String.valueOf(rnd));
+        } else {
+            bigX = new BigInteger(String.valueOf(x));    // x is specified
+        }
+        return g.modPow(n.multiply(bigX), nSquare);
     }
 
 
