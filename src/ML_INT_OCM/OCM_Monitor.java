@@ -93,7 +93,7 @@ public class OCM_Monitor {
         }
     }
 
-    public String construct_ocm_conf(double start_freq, double watchWindow, double slice) {
+    public static String construct_ocm_conf(double start_freq, double watchWindow, double slice) {
        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
        return ocm_conf;
     }
@@ -101,12 +101,17 @@ public class OCM_Monitor {
     public static void main (String[] args) {
         double start_freq = 192.475;   // THz, central wavelength
         double watchWindow = 0.05;     // THz
-//        double bandwidth = watchWindow/1000.0;   // THz
+
         double min_slice = 0.0003125;
         double max_slice = 0.05;
         double slice = max_slice;  // 0.0003125 0.05
 
-        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
+        String file_prefix = "src/ML_INT_OCM/";
+        String file_name = file_prefix + "result.dat";
+        int sleep_ms = 1000;
+
+//        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
+        String ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
 
         int cnt = 0;
 
@@ -115,7 +120,7 @@ public class OCM_Monitor {
         try {
             Socket client = new Socket(SER_ADDR, SER_PORT);
             System.out.println("server:" + SER_ADDR + ", port:" + SER_PORT);
-            OcmMonitorThread ocm_thread = new OcmMonitorThread(watchWindow, slice);
+            OcmMonitorThread ocm_thread = new OcmMonitorThread(file_name, watchWindow, slice);
             ocm_thread.start();
 
             while (true) {
@@ -123,18 +128,25 @@ public class OCM_Monitor {
                 System.out.println(ocm_conf);
 
                 if(cnt == 3) {
-                    ocm_thread.setSlice(0.01);
-                    ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(0.01);
+                    slice = 0.01;
+                    ocm_thread.setSlice(slice);
+                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
                 }
 
                 if(cnt == 6) {
-                    ocm_thread.setSlice(0.0003125);
-                    ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(0.0003125);
+                    slice = 0.0003125;
+                    ocm_thread.setSlice(slice);
+                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
                 }
 
                 if(cnt == 9) {
-                    ocm_thread.setSlice(0.05);
-                    ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(0.05);
+                    slice = 0.05;
+                    ocm_thread.setSlice(slice);
+                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
+                }
+
+                if(cnt == 12) {
+                    sleep_ms = 2000;
                 }
 
 
@@ -147,12 +159,12 @@ public class OCM_Monitor {
                 cnt += 1;
 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(sleep_ms);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                System.out.println("time: " + df.format(new Date()));
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                System.out.println("cnt[" + cnt + "], time: " + df.format(new Date()));
             }
 
             teardownSocket();
@@ -178,9 +190,21 @@ class OcmMonitorThread extends Thread {
     private OutputStream outStrm_OCM;
     private PrintWriter prtwt_OCM;
 
-    OcmMonitorThread(double watchWindow, double slice) {
+    private File wrt_fd;
+    private BufferedWriter buf_wrt;
+
+    OcmMonitorThread(String write_file, double watchWindow, double slice) {
+        this.write_file = write_file;
         this.watchWindow = watchWindow;
         this.slice = slice;
+
+        try {
+            this.wrt_fd = new File(String.format(write_file));
+            this.wrt_fd.createNewFile();
+            this.buf_wrt = new BufferedWriter(new FileWriter(this.wrt_fd));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         OCM = OCM_Monitor.getOCM();
         inStrm_OCM = OCM_Monitor.getInStrm_OCM();
@@ -255,13 +279,16 @@ class OcmMonitorThread extends Thread {
                 }
 
                 len = position;
-
-//                double[] ocm_data = new double[len / DOUBLE_FIELD_SIZE];
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                buf_wrt.write(df.format(new Date()) + "\t");
                 for (int i = 0, j = 0; i < len; i = i + DOUBLE_FIELD_SIZE, j++) {
                     ocm_data[j] = OCM_util.bytes2Double(receive, i);
                     System.out.println("slice[" + j + "]: " + ocm_data[j]);
-//                    ocm_thread.setNames(Double.toString(value[j]));
+                    buf_wrt.write(ocm_data[j] + "\t");
                 }
+                buf_wrt.write("\n");
+                buf_wrt.flush();
+
                 Arrays.fill(ocm_data, 0);
                 Arrays.fill(receive, (byte) 0);
             }
