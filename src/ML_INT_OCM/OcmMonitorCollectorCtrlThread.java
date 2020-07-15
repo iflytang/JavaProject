@@ -121,7 +121,7 @@ public class OcmMonitorCollectorCtrlThread extends Thread {
                 buf_wrt.write(df.format(new Date()) + "\t");
                 for (int i = 0, j = 0; i < len; i = i + DOUBLE_FIELD_SIZE, j++) {
                     ocm_data[j] = OCM_util.bytes2Double(receive, i);
-                    System.out.println("slice[" + j + "]: " + ocm_data[j]);
+//                    System.out.println("slice[" + j + "]: " + ocm_data[j]);
                     buf_wrt.write(ocm_data[j] + "\t");
                 }
                 buf_wrt.write("\n");

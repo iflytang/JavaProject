@@ -3,6 +3,7 @@ package src.ML_INT_OCM;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -122,7 +123,23 @@ public class OCM_Monitor_Collector_Ctrl {
             bufRd_OCM = new BufferedReader(inStrmRd_OCM);
             outStrm_OCM = OCMSock.getOutputStream();
             prtwt_OCM = new PrintWriter(outStrm_OCM);
+            System.out.println("OCMSock: " + OCMSock);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
+    /* set tcp socket connection to DASock. */
+    private static void setupSocketToDA(){
+        try{
+            DASock = new Socket(SER_DA_ADDR, SER_DA_PORT);  // build socket object and setup connection
+            inStrm_DA = DASock.getInputStream();
+            inStrmRd_DA = new InputStreamReader(inStrm_DA);
+            bufInput_DA = new BufferedInputStream(inStrm_DA);
+            bufRd_DA = new BufferedReader(inStrmRd_DA);
+            outStrm_DA = DASock.getOutputStream();
+            prtwt_DA = new PrintWriter(outStrm_DA);
+            System.out.println("DASock: " + DASock);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -134,6 +151,17 @@ public class OCM_Monitor_Collector_Ctrl {
             inStrm_OCM.close();
             prtwt_OCM.close();
             OCMSock.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void teardownDaSocket() {
+        try {
+            bufRd_DA.close();
+            inStrm_DA.close();
+            prtwt_DA.close();
+            DASock.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -158,20 +186,26 @@ public class OCM_Monitor_Collector_Ctrl {
 
 //        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
         String ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
+        String da_conf = "1";
 
         int cnt = 0;
 
         setupSocketToOcm();
+        setupSocketToDA();
 
         try {
-            Socket client = new Socket(SER_OCM_ADDR, SER_OCM_PORT);
-            System.out.println("server:" + SER_OCM_ADDR + ", port:" + SER_OCM_PORT);
             OcmMonitorCollectorCtrlThread ocm_thread = new OcmMonitorCollectorCtrlThread(file_name, watchWindow, slice);
             ocm_thread.start();
 
+            int recv_num = 0;
             while (true) {
+                byte[] receive = new byte[100];
+                recv_num++;
+                int len = inStrm_DA.read(receive, 0, receive.length);
+                System.out.println("DA: " + recv_num + ", " + OCM_util.bytes2Double(receive, 0));
 
-                System.out.println(ocm_conf);
+
+//                System.out.println(ocm_conf);
 
                 if(cnt == 3) {
                     slice = 0.01;
@@ -214,8 +248,9 @@ public class OCM_Monitor_Collector_Ctrl {
             }
 
             teardownOcmSocket();
-        } catch (IOException io) {
-            io.printStackTrace();
+            teardownDaSocket();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
