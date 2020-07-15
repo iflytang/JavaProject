@@ -13,7 +13,7 @@ import java.util.Date;
  */
 
 
-public class OcmMonitorThread extends Thread {
+public class OcmMonitorCollectorCtrlThread extends Thread {
     private volatile String write_file;
     private volatile double watchWindow;
     private volatile double slice;
