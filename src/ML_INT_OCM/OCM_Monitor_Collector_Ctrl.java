@@ -48,7 +48,7 @@ public class OCM_Monitor_Collector_Ctrl {
         return SER_OCM_PORT;
     }
 
-    public static Socket getOCM() {
+    public static Socket getOCMSock() {
         return OCMSock;
     }
 
@@ -76,6 +76,41 @@ public class OCM_Monitor_Collector_Ctrl {
         return prtwt_OCM;
     }
 
+    public static String getSerDaAddr() {
+        return SER_DA_ADDR;
+    }
+
+    public static int getSerDaPort() {
+        return SER_DA_PORT;
+    }
+
+    public static Socket getDASock() {
+        return DASock;
+    }
+
+    public static InputStream getInStrm_DA() {
+        return inStrm_DA;
+    }
+
+    public static InputStreamReader getInStrmRd_DA() {
+        return inStrmRd_DA;
+    }
+
+    public static BufferedInputStream getBufInput_DA() {
+        return bufInput_DA;
+    }
+
+    public static BufferedReader getBufRd_DA() {
+        return bufRd_DA;
+    }
+
+    public static OutputStream getOutStrm_DA() {
+        return outStrm_DA;
+    }
+
+    public static PrintWriter getPrtwt_DA() {
+        return prtwt_DA;
+    }
 
     /* set tcp socket connection to OCMSock. */
     private static void setupSocketToOcm(){
@@ -131,7 +166,7 @@ public class OCM_Monitor_Collector_Ctrl {
         try {
             Socket client = new Socket(SER_OCM_ADDR, SER_OCM_PORT);
             System.out.println("server:" + SER_OCM_ADDR + ", port:" + SER_OCM_PORT);
-            OcmMonitorThread ocm_thread = new OcmMonitorThread(file_name, watchWindow, slice);
+            OcmMonitorCollectorCtrlThread ocm_thread = new OcmMonitorCollectorCtrlThread(file_name, watchWindow, slice);
             ocm_thread.start();
 
             while (true) {

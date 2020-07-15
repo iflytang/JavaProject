@@ -31,7 +31,7 @@ public class OcmMonitorCollectorCtrlThread extends Thread {
     private File wrt_fd;
     private BufferedWriter buf_wrt;
 
-    OcmMonitorThread(String write_file, double watchWindow, double slice) {
+    OcmMonitorCollectorCtrlThread(String write_file, double watchWindow, double slice) {
         this.write_file = write_file;
         this.watchWindow = watchWindow;
         this.slice = slice;
@@ -44,13 +44,13 @@ public class OcmMonitorCollectorCtrlThread extends Thread {
             e.printStackTrace();
         }
 
-        OCM = OCM_Monitor.getOCM();
-        inStrm_OCM = OCM_Monitor.getInStrm_OCM();
-        inStrmRd_OCM = OCM_Monitor.getInStrmRd_OCM();
-        bufInput_OCM = OCM_Monitor.getBufInput_OCM();
-        bufRd_OCM = OCM_Monitor.getBufRd_OCM();
-        outStrm_OCM = OCM_Monitor.getOutStrm_OCM();
-        prtwt_OCM = OCM_Monitor.getPrtwt_OCM();
+        OCM = OCM_Monitor_Collector_Ctrl.getOCMSock();
+        inStrm_OCM = OCM_Monitor_Collector_Ctrl.getInStrm_OCM();
+        inStrmRd_OCM = OCM_Monitor_Collector_Ctrl.getInStrmRd_OCM();
+        bufInput_OCM = OCM_Monitor_Collector_Ctrl.getBufInput_OCM();
+        bufRd_OCM = OCM_Monitor_Collector_Ctrl.getBufRd_OCM();
+        outStrm_OCM = OCM_Monitor_Collector_Ctrl.getOutStrm_OCM();
+        prtwt_OCM = OCM_Monitor_Collector_Ctrl.getPrtwt_OCM();
 
     }
 
