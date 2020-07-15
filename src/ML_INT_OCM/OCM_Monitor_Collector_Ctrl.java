@@ -3,7 +3,6 @@ package src.ML_INT_OCM;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -114,7 +113,7 @@ public class OCM_Monitor_Collector_Ctrl {
     }
 
     /* set tcp socket connection to OCMSock. */
-    private static void setupSocketToOcm(){
+    public static void setupSocketToOcm(){
         try{
             OCMSock = new Socket(SER_OCM_ADDR, SER_OCM_PORT);  // build socket object and setup connection
             inStrm_OCM = OCMSock.getInputStream();
@@ -130,7 +129,7 @@ public class OCM_Monitor_Collector_Ctrl {
     }
 
     /* set tcp socket connection to DASock. */
-    private static void setupSocketToDA(){
+    public static void setupSocketToDA(){
         try{
             DASock = new Socket(SER_DA_ADDR, SER_DA_PORT);  // build socket object and setup connection
             inStrm_DA = DASock.getInputStream();
@@ -145,7 +144,7 @@ public class OCM_Monitor_Collector_Ctrl {
         }
     }
 
-    private static void teardownOcmSocket() {
+    public static void teardownOcmSocket() {
         try {
             bufRd_OCM.close();
             inStrm_OCM.close();
@@ -156,7 +155,7 @@ public class OCM_Monitor_Collector_Ctrl {
         }
     }
 
-    private static void teardownDaSocket() {
+    public static void teardownDaSocket() {
         try {
             bufRd_DA.close();
             inStrm_DA.close();
@@ -182,73 +181,19 @@ public class OCM_Monitor_Collector_Ctrl {
 
         String file_prefix = "src/ML_INT_OCM/";
         String file_name = file_prefix + "result.dat";
-        int sleep_ms = 1000;
-
-//        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
-        String ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
-        String da_conf = "1";
-
-        int cnt = 0;
-
-        setupSocketToOcm();
-        setupSocketToDA();
 
         try {
-            OcmMonitorCollectorCtrlThread ocm_thread = new OcmMonitorCollectorCtrlThread(file_name, watchWindow, slice);
+            setupSocketToOcm();
+            setupSocketToDA();
+
+            /* request ocm data from ocm agent. */
+            Ocm_Monitor_Thread ocm_thread = new Ocm_Monitor_Thread(file_name, watchWindow, slice);
             ocm_thread.start();
 
-            int recv_num = 0;
-            while (true) {
-                byte[] receive = new byte[100];
-                recv_num++;
-                int len = inStrm_DA.read(receive, 0, receive.length);
-                System.out.println("DA: " + recv_num + ", " + OCM_util.bytes2Double(receive, 0));
+            /* receive 'ber' data and reconfigure 'ocm_conf' */
+            Collector_Ctrl_Thread da_thread = new Collector_Ctrl_Thread(ocm_thread);
+            da_thread.start();
 
-
-//                System.out.println(ocm_conf);
-
-                if(cnt == 3) {
-                    slice = 0.01;
-                    ocm_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
-                }
-
-                if(cnt == 6) {
-                    slice = 0.0003125;
-                    ocm_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
-                }
-
-                if(cnt == 9) {
-                    slice = 0.05;
-                    ocm_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
-                }
-
-                if(cnt == 12) {
-                    sleep_ms = 2000;
-                }
-
-
-                if ("end".equals(ocm_conf)) {
-                    break;
-                }
-                prtwt_OCM.println(ocm_conf);
-                prtwt_OCM.flush();
-
-                cnt += 1;
-
-                try {
-                    Thread.sleep(sleep_ms);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                System.out.println("cnt[" + cnt + "], time: " + df.format(new Date()));
-            }
-
-            teardownOcmSocket();
-            teardownDaSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }
