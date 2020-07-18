@@ -187,11 +187,11 @@ public class OCM_Monitor_Collector_Ctrl {
             setupSocketToDA();
 
             /* request ocm data from ocm agent. */
-            Ocm_Monitor_Thread ocm_thread = new Ocm_Monitor_Thread(file_name, watchWindow, slice);
-            ocm_thread.start();
+            Ocm_Monitor_Recv_Thread ocm_recv_thread = new Ocm_Monitor_Recv_Thread(file_name, watchWindow, slice);
+            ocm_recv_thread.start();
 
             /* receive 'ber' data and reconfigure 'ocm_conf' */
-            Collector_Ctrl_Thread da_thread = new Collector_Ctrl_Thread(ocm_thread);
+            Collector_Ctrl_Thread da_thread = new Collector_Ctrl_Thread(ocm_recv_thread);
             da_thread.start();
 
         } catch (Exception e) {

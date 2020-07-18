@@ -25,11 +25,11 @@ public class Collector_Ctrl_Thread extends Thread {
     /* OCMSock send fun. */
     private volatile PrintWriter prtwt_OCM;
 
-    /* Ocm_Monitor_Thread. */
-    private volatile Ocm_Monitor_Thread ocm_monitor_thread;
+    /* Ocm_Monitor_Recv_Thread. */
+    private volatile Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread;
     private volatile int sleep_ms;
 
-    Collector_Ctrl_Thread(Ocm_Monitor_Thread ocm_monitor_thread) {
+    Collector_Ctrl_Thread(Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread) {
         DASock = OCM_Monitor_Collector_Ctrl.getDASock();
         inStrm_DA = OCM_Monitor_Collector_Ctrl.getInStrm_DA();
         inStrmRd_DA = OCM_Monitor_Collector_Ctrl.getInStrmRd_DA();
@@ -42,8 +42,8 @@ public class Collector_Ctrl_Thread extends Thread {
         prtwt_OCM = OCM_Monitor_Collector_Ctrl.getPrtwt_OCM();
         this.sleep_ms = 1000;
 
-        /* call ocm_monitor_thread set_fun(). */
-        this.ocm_monitor_thread = ocm_monitor_thread;
+        /* call ocm_monitor_recv_thread set_fun(). */
+        this.ocm_monitor_recv_thread = ocm_monitor_recv_thread;
     }
 
     public void setPrtwt_OCM(PrintWriter prtwt_OCM) {
@@ -70,8 +70,8 @@ public class Collector_Ctrl_Thread extends Thread {
         this.inStrmRd_DA = inStrmRd_DA;
     }
 
-    public void setOcm_monitor_thread(Ocm_Monitor_Thread ocm_monitor_thread) {
-        this.ocm_monitor_thread = ocm_monitor_thread;
+    public void setOcm_monitor_thread(Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread) {
+        this.ocm_monitor_recv_thread = ocm_monitor_recv_thread;
     }
 
     public void setOutStrm_DA(OutputStream outStrm_DA) {
@@ -110,19 +110,19 @@ public class Collector_Ctrl_Thread extends Thread {
 
                 if(cnt == 2) {
                     slice = 0.01;
-                    ocm_monitor_thread.setSlice(slice);
+                    ocm_monitor_recv_thread.setSlice(slice);
                     ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
                 }
 
                 if(cnt == 4) {
                     slice = 0.0003125;
-                    ocm_monitor_thread.setSlice(slice);
+                    ocm_monitor_recv_thread.setSlice(slice);
                     ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
                 }
 
                 if(cnt == 6) {
                     slice = 0.05;
-                    ocm_monitor_thread.setSlice(slice);
+                    ocm_monitor_recv_thread.setSlice(slice);
                     ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
                 }
 
@@ -142,7 +142,7 @@ public class Collector_Ctrl_Thread extends Thread {
                 try {
                     Thread.sleep(sleep_ms);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
 
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

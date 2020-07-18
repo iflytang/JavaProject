@@ -13,7 +13,7 @@ import java.util.Date;
  */
 
 
-public class Ocm_Monitor_Thread extends Thread {
+public class Ocm_Monitor_Recv_Thread extends Thread {
     private String write_file;
     private volatile double watchWindow;
     private volatile double slice;
@@ -31,7 +31,7 @@ public class Ocm_Monitor_Thread extends Thread {
     private File wrt_fd;
     private BufferedWriter buf_wrt;
 
-    Ocm_Monitor_Thread(String write_file, double watchWindow, double slice) {
+    Ocm_Monitor_Recv_Thread(String write_file, double watchWindow, double slice) {
         this.write_file = write_file;
         this.watchWindow = watchWindow;
         this.slice = slice;
