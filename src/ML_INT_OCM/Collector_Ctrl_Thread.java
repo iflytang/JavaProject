@@ -26,10 +26,11 @@ public class Collector_Ctrl_Thread extends Thread {
     private volatile PrintWriter prtwt_OCM;
 
     /* Ocm_Monitor_Recv_Thread. */
+    private volatile Ocm_Monitor_Send_Thread ocm_monitor_send_thread;
     private volatile Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread;
     private volatile int sleep_ms;
 
-    Collector_Ctrl_Thread(Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread) {
+    Collector_Ctrl_Thread( Ocm_Monitor_Send_Thread ocm_monitor_send_thread, Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread) {
         DASock = OCM_Monitor_Collector_Ctrl.getDASock();
         inStrm_DA = OCM_Monitor_Collector_Ctrl.getInStrm_DA();
         inStrmRd_DA = OCM_Monitor_Collector_Ctrl.getInStrmRd_DA();
@@ -43,6 +44,7 @@ public class Collector_Ctrl_Thread extends Thread {
         this.sleep_ms = 1000;
 
         /* call ocm_monitor_recv_thread set_fun(). */
+        this.ocm_monitor_send_thread = ocm_monitor_send_thread;
         this.ocm_monitor_recv_thread = ocm_monitor_recv_thread;
     }
 
@@ -97,33 +99,46 @@ public class Collector_Ctrl_Thread extends Thread {
         double max_slice = 0.05;
         double slice = max_slice;  // 0.0003125 0.05
 
-        String ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
+        String ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
 
+        boolean run_once =  true;
         try {
             while (true) {
                 byte[] receive = new byte[100];
                 int len = inStrm_DA.read(receive, 0, receive.length);
 
+                if (run_once) {
+                    ocm_monitor_send_thread.setShould_send(true);
+                    run_once = false;
+                }
+
                 if (len < 0) {
                     break;
                 }
+                System.out.println("cnt: " + cnt);
 
                 if(cnt == 2) {
                     slice = 0.01;
                     ocm_monitor_recv_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
 
                 if(cnt == 4) {
                     slice = 0.0003125;
                     ocm_monitor_recv_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
 
                 if(cnt == 6) {
                     slice = 0.05;
                     ocm_monitor_recv_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor_Collector_Ctrl.construct_ocm_conf(start_freq, watchWindow, slice);
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
 
                 if(cnt == 8) {
