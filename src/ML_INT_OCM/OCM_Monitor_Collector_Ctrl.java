@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author tsf
@@ -21,6 +22,8 @@ public class OCM_Monitor_Collector_Ctrl {
     /* collector server socket info  <ip_addr, port>, also known as DA (data analyzer) */
     private static final String SER_DA_ADDR = "192.168.109.221";
     private static final int SER_DA_PORT = 2020;
+
+    private static HashMap<Integer, Double> BER_map_slice = init_BER_map_slice();
 
     /* ocm client socket for communicating with OCM. */
     private static Socket OCMSock;
@@ -166,6 +169,44 @@ public class OCM_Monitor_Collector_Ctrl {
         }
     }
 
+    public static HashMap<Integer, Double> init_BER_map_slice() {
+        HashMap<Integer, Double> BER_map_slice = new HashMap<>();
+
+        int order_1 = 1;
+        double slice_1 = 0.0003125;
+        int order_2 = 2;
+        double slice_2 = 0.0003125;
+        int order_3 = 3;
+        double slice_3 = 0.0003125;
+
+        int order_4 = 4;
+        double slice_4 = 0.01;
+        int order_5 = 5;
+        double slice_5 = 0.01;
+        int order_6 = 6;
+        double slice_6 = 0.01;
+
+        int order_7 = 7;
+        double slice_7 = 0.05;
+        int order_8 = 8;
+        double slice_8 = 0.05;
+        int order_9 = 9;
+        double slice_9 = 0.05;
+
+        BER_map_slice.put(order_1, slice_1);
+        BER_map_slice.put(order_2, slice_2);
+        BER_map_slice.put(order_3, slice_3);
+        BER_map_slice.put(order_4, slice_4);
+        BER_map_slice.put(order_5, slice_5);
+
+        BER_map_slice.put(order_6, slice_6);
+        BER_map_slice.put(order_7, slice_7);
+        BER_map_slice.put(order_8, slice_8);
+        BER_map_slice.put(order_9, slice_9);
+
+        return BER_map_slice;
+    }
+
     public static void main (String[] args) {
         double start_freq = 192.475;   // THz, central wavelength
         double watchWindow = 0.05;     // THz
@@ -202,9 +243,14 @@ public class OCM_Monitor_Collector_Ctrl {
 
             int cnt = 0;
             boolean run_once = true;
+
+            double ber = 0.0;
+            int cur_ber_order = 0, old_ber_order = 0;
+
             while (true) {
                 byte[] receive = new byte[100];
                 int len = inStrm_DA.read(receive, 0, receive.length);
+                ber = OCM_util.bytes2Double(receive, 0);
 
                 if (run_once) {
                     ocm_monitor_send_thread.setShould_send(true);
@@ -215,13 +261,26 @@ public class OCM_Monitor_Collector_Ctrl {
                     break;
                 }
 
-                System.out.println("cnt: " + cnt);
+                System.out.printf("cnt: %d, ber: %.16g\n", cnt, ber);
 
+                /* if order changes, reconfigure 'slice' precision. */
+                cur_ber_order = OCM_util.get_order_of_ber(ber);
+                if (cur_ber_order != old_ber_order) {
+                    slice = BER_map_slice.get(cur_ber_order);
+                    ocm_monitor_recv_thread.setSlice(slice);
+
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
+
+                    old_ber_order = cur_ber_order;
+                }
+
+
+/*
                 if(cnt == 2) {
                     slice = 0.01;
                     ocm_monitor_recv_thread.setSlice(slice);
                     ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
-//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
                     ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
 
@@ -229,7 +288,6 @@ public class OCM_Monitor_Collector_Ctrl {
                     slice = 0.0003125;
                     ocm_monitor_recv_thread.setSlice(slice);
                     ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
-//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
                     ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
 
@@ -237,7 +295,6 @@ public class OCM_Monitor_Collector_Ctrl {
                     slice = 0.05;
                     ocm_monitor_recv_thread.setSlice(slice);
                     ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
-//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
                     ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
 
@@ -249,15 +306,9 @@ public class OCM_Monitor_Collector_Ctrl {
 //                    ocm_monitor_send_thread.setSleep_ms(sleep_ms);
 
                     ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
-//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
                     ocm_monitor_send_thread.setOcm_conf(ocm_conf);
                 }
-
-
-
-                if (cnt > 10000) {
-                    break;
-                }
+*/
 
                 cnt += 1;
             }

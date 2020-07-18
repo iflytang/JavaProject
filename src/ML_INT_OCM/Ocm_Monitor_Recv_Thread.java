@@ -98,17 +98,6 @@ public class Ocm_Monitor_Recv_Thread extends Thread {
         this.slice = slice;
     }
 
-//    volatile int data_num;
-//    volatile int recv_width;
-//    volatile double[] ocm_data;
-//    volatile byte[] receive;
-//
-//    public void setRecvData(double watchWindow, double slice) {
-//        data_num = (int) Math.ceil(watchWindow / slice);
-//        ocm_data = new double[data_num];
-//        recv_width = data_num * DOUBLE_FIELD_SIZE;
-//        receive = new byte[recv_width];
-//    }
 
     @Override
     public void run() {

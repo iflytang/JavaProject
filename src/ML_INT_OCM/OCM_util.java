@@ -27,4 +27,9 @@ public class OCM_util {
         String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
         return ocm_conf;
     }
+
+    /* get ber's abs of magnitude order, for example, ber = 6.515497334070864e-09, then order is 9. */
+    public static int get_order_of_ber(double ber) {
+        return (int) Math.ceil(Math.abs(Math.log10(ber)));
+    }
 }
