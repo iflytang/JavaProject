@@ -22,4 +22,9 @@ public class OCM_util {
         }
         return Double.longBitsToDouble(value);
     }
+
+    public static String construct_ocm_conf(double start_freq, double watchWindow, double slice) {
+        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
+        return ocm_conf;
+    }
 }

@@ -166,11 +166,6 @@ public class OCM_Monitor_Collector_Ctrl {
         }
     }
 
-    public static String construct_ocm_conf(double start_freq, double watchWindow, double slice) {
-       String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
-       return ocm_conf;
-    }
-
     public static void main (String[] args) {
         double start_freq = 192.475;   // THz, central wavelength
         double watchWindow = 0.05;     // THz
@@ -179,20 +174,93 @@ public class OCM_Monitor_Collector_Ctrl {
         double max_slice = 0.05;
         double slice = max_slice;  // 0.0003125 0.05
 
+        int default_sleep_ms = 1000;  // default sleep 1s
+
         String file_prefix = "src/ML_INT_OCM/";
         String file_name = file_prefix + "result.dat";
+
+        String ocm_conf;
+        int sleep_ms = 1000;
 
         try {
             setupSocketToOcm();
             setupSocketToDA();
 
-            /* request ocm data from ocm agent. */
-            Ocm_Monitor_Recv_Thread ocm_recv_thread = new Ocm_Monitor_Recv_Thread(file_name, watchWindow, slice);
-            ocm_recv_thread.start();
+            /* send ocm_conf to ocm agent. */
+            Ocm_Monitor_Send_Thread ocm_monitor_send_thread = new Ocm_Monitor_Send_Thread(start_freq, watchWindow, slice, default_sleep_ms);
+            ocm_monitor_send_thread.start();
 
-            /* receive 'ber' data and reconfigure 'ocm_conf' */
-            Collector_Ctrl_Thread da_thread = new Collector_Ctrl_Thread(ocm_recv_thread);
-            da_thread.start();
+            /* request ocm data from ocm agent. */
+            Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread = new Ocm_Monitor_Recv_Thread(file_name, watchWindow, slice);
+            ocm_monitor_recv_thread.start();
+
+            /* receive 'ber' data and reconfigure 'ocm_conf'
+            *  teardown sockets in da_thread.
+            * */
+//            Collector_Ctrl_Thread da_thread = new Collector_Ctrl_Thread(ocm_monitor_send_thread, ocm_monitor_recv_thread);
+//            da_thread.start();
+
+            int cnt = 0;
+            boolean run_once = true;
+            while (true) {
+                byte[] receive = new byte[100];
+                int len = inStrm_DA.read(receive, 0, receive.length);
+
+                if (run_once) {
+                    ocm_monitor_send_thread.setShould_send(true);
+                    run_once = false;
+                }
+
+                if (len < 0) {
+                    break;
+                }
+
+                System.out.println("cnt: " + cnt);
+
+                if(cnt == 2) {
+                    slice = 0.01;
+                    ocm_monitor_recv_thread.setSlice(slice);
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
+                }
+
+                if(cnt == 4) {
+                    slice = 0.0003125;
+                    ocm_monitor_recv_thread.setSlice(slice);
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
+                }
+
+                if(cnt == 6) {
+                    slice = 0.05;
+                    ocm_monitor_recv_thread.setSlice(slice);
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
+                }
+
+                if(cnt == 8) {
+                    slice = 0.0003125;
+                    ocm_monitor_recv_thread.setSlice(slice);
+
+//                    sleep_ms = 5000;
+//                    ocm_monitor_send_thread.setSleep_ms(sleep_ms);
+
+                    ocm_conf = OCM_util.construct_ocm_conf(start_freq, watchWindow, slice);
+//                    ocm_monitor_recv_thread.setRecvData(watchWindow, slice);
+                    ocm_monitor_send_thread.setOcm_conf(ocm_conf);
+                }
+
+
+
+                if (cnt > 10000) {
+                    break;
+                }
+
+                cnt += 1;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
