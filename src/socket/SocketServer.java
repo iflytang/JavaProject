@@ -16,8 +16,8 @@ import java.net.Socket;
 public class SocketServer  {
 
 
-    private static final String SERVER_ADDR = "192.168.109.214";
-    private static final int PORT = 2022;
+    private static final String SERVER_ADDR = "192.168.109.212";
+    private static final int PORT = 2020;
 
     static int socket_num = 0;
 

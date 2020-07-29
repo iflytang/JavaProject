@@ -13,9 +13,9 @@ import java.net.Socket;
 
 public class SocketClient {
 
-    private static final String SERVER_ADDR = "192.168.109.211";
+    private static final String SERVER_ADDR = "192.168.108.126";
     private static final String CLIENT_ADDR = "192.168.109.209";
-    private static final int PORT = 2019;
+    private static final int PORT = 9999;
 
     public static void main (String[] args) {
 
