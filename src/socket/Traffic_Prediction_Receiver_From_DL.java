@@ -1,9 +1,7 @@
 package src.socket;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +14,7 @@ import java.util.Date;
  * @date 19-4-10
  * @desp
  */
-public class SingleSocketServer implements Runnable {
+public class Traffic_Prediction_Receiver_From_DL implements Runnable {
 
     private static final String SERVER_ADDR = "192.168.109.214";
     private static final String CLIENT_ADDR = "192.168.109.209";
@@ -28,7 +26,7 @@ public class SingleSocketServer implements Runnable {
     private Socket client = null;
     private static int socket_num = 0;
 
-    public SingleSocketServer(Socket client) {
+    public Traffic_Prediction_Receiver_From_DL(Socket client) {
         this.client = client;
     }
 
@@ -156,7 +154,7 @@ public class SingleSocketServer implements Runnable {
                 inetAddress = client.getInetAddress();
                socket_num++;
                 System.out.println("client<" + inetAddress + "> connected! connected_num: " + socket_num);
-                new Thread(new SingleSocketServer(client)).start();
+                new Thread(new Traffic_Prediction_Receiver_From_DL(client)).start();
 
             }
 
