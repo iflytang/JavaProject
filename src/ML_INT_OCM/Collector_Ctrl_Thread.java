@@ -31,16 +31,16 @@ public class Collector_Ctrl_Thread extends Thread {
     private volatile int sleep_ms;
 
     Collector_Ctrl_Thread( Ocm_Monitor_Send_Thread ocm_monitor_send_thread, Ocm_Monitor_Recv_Thread ocm_monitor_recv_thread) {
-        DASock = OCM_Monitor_Collector_Ctrl.getDASock();
-        inStrm_DA = OCM_Monitor_Collector_Ctrl.getInStrm_DA();
-        inStrmRd_DA = OCM_Monitor_Collector_Ctrl.getInStrmRd_DA();
-        bufInput_DA = OCM_Monitor_Collector_Ctrl.getBufInput_DA();
-        bufRd_DA = OCM_Monitor_Collector_Ctrl.getBufRd_DA();
-        outStrm_DA = OCM_Monitor_Collector_Ctrl.getOutStrm_DA();
-        prtwt_DA = OCM_Monitor_Collector_Ctrl.getPrtwt_DA();
+        DASock = Ocm_Monitor_Collector_Ctrl.getDASock();
+        inStrm_DA = Ocm_Monitor_Collector_Ctrl.getInStrm_DA();
+        inStrmRd_DA = Ocm_Monitor_Collector_Ctrl.getInStrmRd_DA();
+        bufInput_DA = Ocm_Monitor_Collector_Ctrl.getBufInput_DA();
+        bufRd_DA = Ocm_Monitor_Collector_Ctrl.getBufRd_DA();
+        outStrm_DA = Ocm_Monitor_Collector_Ctrl.getOutStrm_DA();
+        prtwt_DA = Ocm_Monitor_Collector_Ctrl.getPrtwt_DA();
 
         /* send ocm_conf to ocm. */
-        prtwt_OCM = OCM_Monitor_Collector_Ctrl.getPrtwt_OCM();
+        prtwt_OCM = Ocm_Monitor_Collector_Ctrl.getPrtwt_OCM();
         this.sleep_ms = 1000;
 
         /* call ocm_monitor_recv_thread set_fun(). */
@@ -167,8 +167,8 @@ public class Collector_Ctrl_Thread extends Thread {
                 System.out.println("\n");
             }
 
-            OCM_Monitor_Collector_Ctrl.teardownOcmSocket();
-            OCM_Monitor_Collector_Ctrl.teardownDaSocket();
+            Ocm_Monitor_Collector_Ctrl.teardownOcmSocket();
+            Ocm_Monitor_Collector_Ctrl.teardownDaSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }

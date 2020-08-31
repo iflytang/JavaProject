@@ -38,19 +38,21 @@ public class Ocm_Monitor_Recv_Thread extends Thread {
 
         try {
             this.wrt_fd = new File(String.format(write_file));
-            this.wrt_fd.createNewFile();
+            if (!this.wrt_fd.exists()) {
+                this.wrt_fd.createNewFile();
+            }
             this.buf_wrt = new BufferedWriter(new FileWriter(this.wrt_fd));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        OCM = OCM_Monitor_Collector_Ctrl.getOCMSock();
-        inStrm_OCM = OCM_Monitor_Collector_Ctrl.getInStrm_OCM();
-        inStrmRd_OCM = OCM_Monitor_Collector_Ctrl.getInStrmRd_OCM();
-        bufInput_OCM = OCM_Monitor_Collector_Ctrl.getBufInput_OCM();
-        bufRd_OCM = OCM_Monitor_Collector_Ctrl.getBufRd_OCM();
-        outStrm_OCM = OCM_Monitor_Collector_Ctrl.getOutStrm_OCM();
-        prtwt_OCM = OCM_Monitor_Collector_Ctrl.getPrtwt_OCM();
+        OCM = Ocm_Monitor_Collector_Ctrl.getOCMSock();
+        inStrm_OCM = Ocm_Monitor_Collector_Ctrl.getInStrm_OCM();
+        inStrmRd_OCM = Ocm_Monitor_Collector_Ctrl.getInStrmRd_OCM();
+        bufInput_OCM = Ocm_Monitor_Collector_Ctrl.getBufInput_OCM();
+        bufRd_OCM = Ocm_Monitor_Collector_Ctrl.getBufRd_OCM();
+        outStrm_OCM = Ocm_Monitor_Collector_Ctrl.getOutStrm_OCM();
+        prtwt_OCM = Ocm_Monitor_Collector_Ctrl.getPrtwt_OCM();
 
     }
 
@@ -121,13 +123,14 @@ public class Ocm_Monitor_Recv_Thread extends Thread {
 
                 len = position;
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                buf_wrt.write(df.format(new Date()) + "\t");
+                buf_wrt.write(df.format(new Date()) + "\t");  // timestamp
+                buf_wrt.write(data_num + "\t" + slice + "\t");
                 for (i = 0, j = 0; i < len; i = i + DOUBLE_FIELD_SIZE, j++) {
                     ocm_data[j] = OCM_util.bytes2Double(receive, i);
 //                    System.out.println("slice[" + j + "]: " + ocm_data[j]);
-                    buf_wrt.write(ocm_data[j] + "\t");
+                    buf_wrt.write(String.format("%.1f", ocm_data[j]) + "\t");   // keep one decimal
                 }
-                System.out.println("OCM Recv (data_num): " + j +"\n");
+                System.out.println("OCM Recv (data_num): " + j + ", slice: " + slice + "\n");
                 buf_wrt.write("\n");
                 buf_wrt.flush();
 

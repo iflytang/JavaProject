@@ -31,13 +31,13 @@ public class Ocm_Monitor_Send_Thread extends Thread {
     private volatile Boolean should_send = false;
 
     Ocm_Monitor_Send_Thread(double start_freq, double watchWindow, double slice,  int sleep_ms) {
-        OCMSock = OCM_Monitor_Collector_Ctrl.getOCMSock();
-        inStrm_OCM = OCM_Monitor_Collector_Ctrl.getInStrm_OCM();
-        inStrmRd_OCM = OCM_Monitor_Collector_Ctrl.getInStrmRd_OCM();
-        bufInput_OCM = OCM_Monitor_Collector_Ctrl.getBufInput_OCM();
-        bufRd_OCM = OCM_Monitor_Collector_Ctrl.getBufRd_OCM();
-        outStrm_OCM = OCM_Monitor_Collector_Ctrl.getOutStrm_OCM();
-        prtwt_OCM = OCM_Monitor_Collector_Ctrl.getPrtwt_OCM();
+        OCMSock = Ocm_Monitor_Collector_Ctrl.getOCMSock();
+        inStrm_OCM = Ocm_Monitor_Collector_Ctrl.getInStrm_OCM();
+        inStrmRd_OCM = Ocm_Monitor_Collector_Ctrl.getInStrmRd_OCM();
+        bufInput_OCM = Ocm_Monitor_Collector_Ctrl.getBufInput_OCM();
+        bufRd_OCM = Ocm_Monitor_Collector_Ctrl.getBufRd_OCM();
+        outStrm_OCM = Ocm_Monitor_Collector_Ctrl.getOutStrm_OCM();
+        prtwt_OCM = Ocm_Monitor_Collector_Ctrl.getPrtwt_OCM();
 
         this.start_freq = start_freq;
         this.watchWindow = watchWindow;
@@ -112,10 +112,12 @@ public class Ocm_Monitor_Send_Thread extends Thread {
                     prtwt_OCM.println(ocm_conf);
                     prtwt_OCM.flush();
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    System.out.println("time: " + df.format(new Date()));
+                    System.out.println("\ntime: " + df.format(new Date()));
                     System.out.println("OCM Send (ocm_conf): " + ocm_conf);
 
-                    Thread.sleep(sleep_ms);
+//                    Thread.sleep(sleep_ms);
+
+                    should_send = false;
                 }
             }
         } catch (Exception e) {
