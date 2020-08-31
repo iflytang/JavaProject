@@ -1,9 +1,6 @@
 package src.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.IntStream;
 
 /**
@@ -57,6 +54,11 @@ public class Test {
         return (float) Arrays.stream(doubles).max().getAsDouble();
     }
 
+    public static String construct_ocm_conf(double start_freq, double watchWindow, double slice) {
+        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
+        return ocm_conf;
+    }
+
 
     public static void main(String[] args) {
         ToolKit tools = new ToolKit();
@@ -93,13 +95,30 @@ public class Test {
         System.out.println(f);
         System.out.println(f2);*/
 
-        float[] num = {1.1f, 1.5f, 1.3f};
-//        System.out.println(MAX_floatArry(num));
-        System.out.println(MAX_floatStream(num));
-        System.out.println(Arrays.toString(num));
+//        float[] num = {1.1f, 1.5f, 1.3f};
+////        System.out.println(MAX_floatArry(num));
+//        System.out.println(MAX_floatStream(num));
+//        System.out.println(Arrays.toString(num));
+//
+//        float x = 0.70f;
+//        System.out.println((int) (x/0.1f));
 
-        float x = 0.70f;
-        System.out.println((int) (x/0.1f));
+        double start_freq = 192.575;   // THz, central wavelength
+        double watchWindow = 0.05;     // THz
+        double severe_level_slice_unit = 0.0003125;  // 0.05 / 0.0003125 = 160 points
+        double medium_level_slice_uint = severe_level_slice_unit * 2;    // 80 points, * 2
+        double normal_level_slice_uint = severe_level_slice_unit * 8;    // 20 points, * 8
+        System.out.println(Double.toString(start_freq) + " " + Double.toString(start_freq).length() + "\n" +
+                Double.toString(watchWindow) + " " + Double.toString(watchWindow).length() + "\n" +
+                Double.toString(severe_level_slice_unit) + " " + Double.toString(severe_level_slice_unit).length() + "\n" +
+                Double.toString(medium_level_slice_uint) + " " + Double.toString(medium_level_slice_uint).length() + "\n" +
+                Double.toString(normal_level_slice_uint) + " " + Double.toString(normal_level_slice_uint).length()
+        );
+
+        System.out.println(construct_ocm_conf(start_freq, watchWindow, severe_level_slice_unit) + " " + construct_ocm_conf(start_freq, watchWindow, severe_level_slice_unit).length() + "\n" +
+                construct_ocm_conf(start_freq, watchWindow, medium_level_slice_uint) + " " + construct_ocm_conf(start_freq, watchWindow, medium_level_slice_uint).length() + "\n" +
+                construct_ocm_conf(start_freq, watchWindow, normal_level_slice_uint) + " " + construct_ocm_conf(start_freq, watchWindow, normal_level_slice_uint).length()
+        );
 
     }
 }
