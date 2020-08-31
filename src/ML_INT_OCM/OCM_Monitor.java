@@ -2,9 +2,6 @@ package src.ML_INT_OCM;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -100,15 +97,15 @@ public class OCM_Monitor {
     }
 
     public static void main (String[] args) {
-        double start_freq = 192.475;   // THz, central wavelength
+        double start_freq = 192.575;   // THz, central wavelength
         double watchWindow = 0.05;     // THz
 
         double min_slice = 0.0003125;
         double max_slice = 0.05;
-        double slice = max_slice;  // 0.0003125 0.05
+        double slice = min_slice;  // 0.0003125 0.05
 
         String file_prefix = "src/ML_INT_OCM/";
-        String file_name = file_prefix + "result.dat";
+        String file_name = file_prefix + "result.txt";
         int sleep_ms = 1000;
 
 //        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
@@ -128,27 +125,27 @@ public class OCM_Monitor {
 
                 System.out.println(ocm_conf);
 
-                if(cnt == 3) {
-                    slice = 0.01;
-                    ocm_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
-                }
-
-                if(cnt == 6) {
-                    slice = 0.0003125;
-                    ocm_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
-                }
-
-                if(cnt == 9) {
-                    slice = 0.05;
-                    ocm_thread.setSlice(slice);
-                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
-                }
-
-                if(cnt == 12) {
-                    sleep_ms = 2000;
-                }
+//                if(cnt == 3) {
+//                    slice = 0.01;
+//                    ocm_thread.setSlice(slice);
+//                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
+//                }
+//
+//                if(cnt == 6) {
+//                    slice = 0.0003125;
+//                    ocm_thread.setSlice(slice);
+//                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
+//                }
+//
+//                if(cnt == 9) {
+//                    slice = 0.05;
+//                    ocm_thread.setSlice(slice);
+//                    ocm_conf = OCM_Monitor.construct_ocm_conf(start_freq, watchWindow, slice);
+//                }
+//
+//                if(cnt == 12) {
+//                    sleep_ms = 2000;
+//                }
 
 
                 if ("end".equals(ocm_conf)) {
