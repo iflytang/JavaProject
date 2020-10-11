@@ -109,7 +109,13 @@ public class Ocm_Monitor_Recv_Thread extends Thread {
         try {
             while (true) {
 
-                int data_num = (int) Math.ceil(watchWindow / slice);
+//                int data_num = (int) Math.ceil(watchWindow / slice);
+                int expected_data_num = (int) Math.ceil(watchWindow / slice);
+                int data_num = Ocm_Monitor_Collector_Ctrl.SLICE_NUM;
+
+                double expected_slice = slice;
+                double fixed_slice = Ocm_Monitor_Collector_Ctrl.MIN_SLICE;
+
                 byte[] receive = new byte[data_num * DOUBLE_FIELD_SIZE];
                 double[] ocm_data = new double[data_num];
                 int recv_width = data_num * DOUBLE_FIELD_SIZE;
@@ -124,7 +130,7 @@ public class Ocm_Monitor_Recv_Thread extends Thread {
                 len = position;
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 buf_wrt.write(df.format(new Date()) + "\t");  // timestamp
-                buf_wrt.write(data_num + "\t" + slice + "\t");
+                buf_wrt.write(expected_data_num + "\t" + data_num + "\t" + expected_slice+ "\t" + fixed_slice + "\t");
                 for (i = 0, j = 0; i < len; i = i + DOUBLE_FIELD_SIZE, j++) {
                     ocm_data[j] = OCM_util.bytes2Double(receive, i);
 //                    System.out.println("slice[" + j + "]: " + ocm_data[j]);

@@ -105,7 +105,8 @@ public class OCM_Monitor {
         double slice = min_slice;  // 0.0003125 0.05
 
         String file_prefix = "src/ML_INT_OCM/";
-        String file_name = file_prefix + "result.txt";
+//        String file_name = file_prefix + "result_fixed_dB_6.txt";
+        String file_name = file_prefix + "result_test.txt";
         int sleep_ms = 1000;
 
 //        String ocm_conf = Double.toString(start_freq)+" "+Double.toString(watchWindow)+" "+Double.toString(slice);
@@ -261,6 +262,8 @@ class OcmMonitorThread extends Thread {
     @Override
     public void run() {
 
+        int i, j;
+
         try {
             while (true) {
 
@@ -276,14 +279,18 @@ class OcmMonitorThread extends Thread {
                     position += len;
                 }
 
+                System.out.printf("watchWindow: %f, slice: %f, recv_len: %d\n", watchWindow, slice, len / 8);
+
                 len = position;
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 buf_wrt.write(df.format(new Date()) + "\t");
-                for (int i = 0, j = 0; i < len; i = i + DOUBLE_FIELD_SIZE, j++) {
+                buf_wrt.write(data_num + "\t" + slice + "\t");
+                for (i = 0, j = 0; i < len; i = i + DOUBLE_FIELD_SIZE, j++) {
                     ocm_data[j] = OCM_util.bytes2Double(receive, i);
                     System.out.println("slice[" + j + "]: " + ocm_data[j]);
-                    buf_wrt.write(ocm_data[j] + "\t");
+                    buf_wrt.write(String.format("%.1f", ocm_data[j]) + "\t");   // keep one decimal
                 }
+                System.out.println(df.format(new Date()) + "\t OCM Recv (data_num): " + j + ", slice: " + slice + "\n");
                 buf_wrt.write("\n");
                 buf_wrt.flush();
 

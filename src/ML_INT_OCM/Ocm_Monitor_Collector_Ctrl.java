@@ -25,6 +25,10 @@ public class Ocm_Monitor_Collector_Ctrl {
 
     private static final int DOUBLE_FIELD_SIZE = 8;
 
+    public static final double WATCH_WINDOW = 0.05;
+    public static final double MIN_SLICE = 0.0003125;
+    public static final int SLICE_NUM = (int) Math.ceil(WATCH_WINDOW / MIN_SLICE);
+
     private static HashMap<Integer, Double> BER_map_slice = init_BER_map_to_slice_table();
     private static HashMap<Integer, Integer> BER_map_request_ms_period = init_BER_map_to_request_ms_period_table();
 
