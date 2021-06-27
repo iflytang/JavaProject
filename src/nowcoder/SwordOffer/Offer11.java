@@ -1,5 +1,7 @@
 package src.nowcoder.SwordOffer;
 
+import java.util.Arrays;
+
 /**
  * @author tsf
  * @date 21-03-25
@@ -51,7 +53,7 @@ public class Offer11 {
                 ret = array[i + 1];
             }
 
-            if (i == (array.length -1)) {  // 如果尾处仍未违反，这说明旋转数组的最小值在idx=0处
+            if (((i+1) == (array.length -1)) && (array[i+1] > array[0])) {  // 如果尾处仍未违反，这说明旋转数组的最小值在idx=0处
                 ret = array[0];
             }
         }
@@ -64,7 +66,7 @@ public class Offer11 {
 
         Offer11 offer11 = new Offer11();
 
-        int [] input1 = {3, 4, 5, 1, 2};
+        int [] input1 = {1, 3, 5};
         int ret = offer11.minNumberInRotateArray(input1);
         System.out.println(ret);
 

@@ -133,7 +133,7 @@ public class Offer53_1 {
 
         Offer53_1 offer53_1 = new Offer53_1();
 
-        int [] nums = {5, 7, 7, 8, 8, 10};
+        int [] nums = {5, 7, 7, 8, 8, 8, 8, 10};
 //        int [] nums = {2, 2, 2, 2};
         int target = 8;
         int ret = offer53_1.search(nums, target);
