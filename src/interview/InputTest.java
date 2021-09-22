@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @desp
  */
 
-public class Main {
+public class InputTest {
     public static void helper(int[] arr) {
         System.out.println(3);
     }
